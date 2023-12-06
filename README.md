@@ -1,2 +1,2 @@
-# gpmlang
-General Purpose Mathematics Language
+# TODO
+Experimenting for now
