@@ -1,15 +1,17 @@
 CXX = g++
-
 BIN = gpm
 
-lex:
-	lex lex.l
+all: lex parse compile
 
-parse:
+lex: lexer.l
+	lex lexer.l
+
+parse: parse.y
 	yacc -d parse.y
 
-compile:
-	$(CXX) lex.yy.c y.tab.c -o $(BIN)
+compile: lex.yy.c y.tab.c
+	$(CXX) $^ -o $(BIN)
 
 clean:
-	rm -f *.c *.h $(BIN)
+	rm -f *yy.c y.tab* $(BIN)
+
