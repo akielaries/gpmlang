@@ -1,6 +1,12 @@
 %{
 #include <stdio.h>
+
+int yylex(void);
+void yyerror(const char *s) {
+    fprintf(stderr, "Error: %s\n", s);
+}
 %}
+
 
 %token NUMBER
 %left '+' '-'
