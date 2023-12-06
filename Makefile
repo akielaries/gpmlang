@@ -9,7 +9,7 @@ lex: lexer.l
 parse: parse.y
 	yacc -d parse.y
 
-compile: lex.yy.c y.tab.c
+compile: lex.yy.c y.tab.c gpm.c
 	$(CXX) $^ -o $(BIN)
 
 clean:

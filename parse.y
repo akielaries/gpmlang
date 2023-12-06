@@ -4,9 +4,12 @@
 extern FILE *yyin;
 
 int yylex(void);
+extern int yylineno;
+
 void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s\n", s);
+    fprintf(stderr, "Error at line %d: %s\n", yylineno, s);
 }
+
 %}
 
 %token NUMBER
@@ -33,25 +36,4 @@ factor: NUMBER
       | '(' expr ')' { $$ = $2; }
 
 %%
-
-int main(int argc, char *argv[]) {
-    FILE *file;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
-        return 1;
-    }
-
-    file = fopen(argv[1], "r");
-    if (!file) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    yyin = file;
-    yyparse();
-
-    fclose(file);
-    return 0;
-}
 
