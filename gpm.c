@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "syntax_table.h"
 
 extern FILE *yyin; /** for parsing input file */
 // extern int yylineno;        /** keep track of file line number */
