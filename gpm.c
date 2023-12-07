@@ -1,37 +1,25 @@
+#include "libio.h"
 #include <stdio.h>
 
-extern FILE *yyin;          /** for parsing input file */
-extern int yylineno;        /** keep track of file line number */
-
-int yyparse(void);
-
-void usage() {
-
-}
+extern int yyparse(void);
 
 int main(int argc, char *argv[]) {
-
-    FILE *file;
-
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
         return 1;
     }
 
-    file = fopen(argv[1], "r");
-    if (!file) {
+    FILE *f = fopen(argv[1], "r");
+    if (!f) {
         perror("Error opening file");
         return 1;
     }
 
-    yyin = file;
-    yylineno = 0;  // Initialize line number
-
+    yyin = f;
     yyparse();
 
-    fclose(file);
+    fclose(f);
+
     return 0;
-
-
 }
 
