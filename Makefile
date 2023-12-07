@@ -16,5 +16,5 @@ compile: lex.yy.c y.tab.c gpm.c
 	$(CXX) $^ -o $(BIN)
 
 clean:
-	rm -f *yy.c y.tab* *.o $(BIN)
+	rm -f *.output *yy.c y.tab* *.o $(BIN)
 
