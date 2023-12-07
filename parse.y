@@ -4,11 +4,15 @@
     #include <string.h>
     #include <stdlib.h>
     #include <ctype.h>
+    
     //#include "lex.yy.c"
 
     void yyerror(const char *s);
     int yylex();
     int yywrap();
+
+    #include "s_table.h"
+
 %}
 
 %token VOID
@@ -16,6 +20,10 @@
 %token PRINTFF
 %token SCANFF
 %token INT
+%token INT8
+%token INT16
+%token INT32
+%token INT64
 %token FLOAT
 %token CHAR
 %token FOR

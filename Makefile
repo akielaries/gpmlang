@@ -12,6 +12,9 @@ parse: parse.y
 libio: libio.c
 	$(CXX) -c -o libio.o libio.c
 
+symbol_table: s_table.c
+	$(CXX) -o s_table.o s_table.c
+
 compile: lex.yy.c y.tab.c gpm.c
 	$(CXX) $^ -o $(BIN)
 
