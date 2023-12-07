@@ -11,7 +11,19 @@
     int yylex();
     int yywrap();
 
-    #include "syntax_table.h"
+    void add(char);
+    void insert_type();
+    int search(char *);
+    void insert_type();
+
+    struct dataType {
+        char * id_name;
+        char * data_type;
+        char * type;
+        int line_no;
+    } symbol_table[40];
+
+    //#include "syntax_table.h"
 
     int count = 0;
     int q;
@@ -60,79 +72,78 @@
 %%
 /* RULES */
 
-
 program: headers main '(' ')' '{' body return '}'
-       ;
+;
 
 headers: headers headers
-       | INCLUDE
-       ;
+| INCLUDE { add('H'); }
+;
 
-main: datatype ID
-    ;
+main: datatype ID { add('F'); }
+;
 
-datatype: INT 
-        | FLOAT 
-        | CHAR
-        | VOID
-        ;
+datatype: INT { insert_type(); }
+| FLOAT { insert_type(); }
+| CHAR { insert_type(); }
+| VOID { insert_type(); }
+;
 
-body: FOR '(' statement ';' condition ';' statement ')' '{' body '}'
-    | IF '(' condition ')' '{' body '}' else
-    | statement ';' 
-    | body body
-    | PRINTFF '(' STR ')' ';'
-    | SCANFF '(' STR ',' '&' ID ')' ';'
-    ;
+body: FOR { add('K'); } '(' statement ';' condition ';' statement ')' '{' body '}'
+| IF { add('K'); } '(' condition ')' '{' body '}' else
+| statement ';'
+| body body 
+| PRINTFF { add('K'); } '(' STR ')' ';'
+| SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';'
+;
 
-else: ELSE '{' body '}'
-    |
-    ;
+else: ELSE { add('K'); } '{' body '}'
+|
+;
 
 condition: value relop value 
-         | TRUE 
-         | FALSE
-         ;
+| TRUE { add('K'); }
+| FALSE { add('K'); }
+|
+;
 
-statement: datatype ID init 
-         | ID '=' expression 
-         | ID relop expression
-         | ID UNARY 
-         | UNARY ID
-         ;
+statement: datatype ID { add('V'); } init
+| ID '=' expression
+| ID relop expression
+| ID UNARY
+| UNARY ID
+;
 
-init: '=' value 
-    |
-    ;
+init: '=' value
+|
+;
 
 expression: expression arithmetic expression
-          | value
-          ;
+| value
+;
 
 arithmetic: ADD 
-          | SUBTRACT 
-          | MULTIPLY
-          | DIVIDE
-          ;
+| SUBTRACT 
+| MULTIPLY
+| DIVIDE
+;
 
 relop: LT
-     | GT
-     | LE
-     | GE
-     | EQ
-     | NE
-     ;
+| GT
+| LE
+| GE
+| EQ
+| NE
+;
 
-value: NUMBER
-     | FLOAT_NUM
-     | CHARACTER
-     | ID
-     ;
+value: NUMBER { add('C'); }
+| FLOAT_NUM { add('C'); }
+| CHARACTER { add('C'); }
+| ID
+;
 
-return: RETURN value ';' 
-      |
-      ;
-
+return: RETURN { add('K'); } value ';'
+|
+;
 
 %%
 
@@ -190,4 +201,21 @@ void add(char c) {
 
 void insert_type() {
 	strcpy(type, yytext);
+}
+
+void print_syntax_table() {
+    printf("\n\n");
+    printf("\nSYMBOL   DATATYPE   TYPE   LINE NUMBER \n");
+    printf("_______________________________________\n\n");
+
+    for (int i = 0; i < count; i++) {
+        printf("%s\t%s\t%s\t%d\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no);
+    }
+
+    for (int i = 0; i < count; i++) {
+        free(symbol_table[i].id_name);
+        free(symbol_table[i].type);
+    }
+
+    printf("\n\n");
 }

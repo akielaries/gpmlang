@@ -3,7 +3,7 @@
 actions*/
     #include "y.tab.h"
     /* keep track of line number */
-    int line_number = 0;
+    int line_number = 1;
     //extern char* yytext;
 
 %}

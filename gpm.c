@@ -24,6 +24,8 @@ int main(int argc, char *argv[]) {
     yyin = file;
     yyparse();
 
+    print_syntax_table();
+
     fclose(file);
     return 0;
 }
