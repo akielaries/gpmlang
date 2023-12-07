@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "s_table.h"
+#include "syntax_table.h"
 
 int count;
 extern int line_number;

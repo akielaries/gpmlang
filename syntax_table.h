@@ -1,5 +1,5 @@
-#ifndef __S_TABLE_H__
-#define __S_TABLE_H__
+#ifndef __SYNTAX_TABLE_H__
+#define __SYNTAX_TABLE_H__
 
 
 struct DataType {
