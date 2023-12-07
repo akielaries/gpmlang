@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-extern FILE *yyin;          /** for parsing input file */
-//extern int yylineno;        /** keep track of file line number */
+extern FILE *yyin; /** for parsing input file */
+// extern int yylineno;        /** keep track of file line number */
 
 int yyparse(void);
 
@@ -29,4 +29,3 @@ int main(int argc, char *argv[]) {
     fclose(file);
     return 0;
 }
-

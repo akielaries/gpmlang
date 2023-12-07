@@ -159,13 +159,13 @@ int search(char *type) {
 }
 
 void add(char c) {
-  q=search(yytext);
-  if(!q) {
-    if(c == 'H') {
-			symbol_table[count].id_name=strdup(yytext);
-			symbol_table[count].data_type=strdup(type);
-			symbol_table[count].line_no=line_number;
-			symbol_table[count].type=strdup("Header");
+    q=search(yytext);
+    if(!q) {
+        if(c == 'H') {
+            symbol_table[count].id_name=strdup(yytext);
+            symbol_table[count].data_type=strdup(type);
+            symbol_table[count].line_no=line_number;
+            symbol_table[count].type=strdup("Header");
 			count++;
 		}
 		else if(c == 'K') {
