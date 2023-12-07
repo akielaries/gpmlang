@@ -1,22 +1,64 @@
 %{
-#include "y.tab.h"
+/* Lexical analyzer for gpmlang defining some patterns and corresponding 
+actions*/
+    #include "y.tab.h"
+    /* keep track of line number */
+    int line_number = 0;
+
 %}
 
-DIGIT   [0-9]
-ID      [a-zA-Z_][a-zA-Z0-9_]*
+/* definitions */
+
+/* create scanner for line number */
+%option yylineno
+
+alpha [a-zA-Z]
+digit [0-9]
+unary "++"|"--"
 
 %%
-"print"     { return PRINT; }
-"int"       { return INT; }
-{DIGIT}+    { yylval = atoi(yytext); return NUMBER; }
 
-{ID}        { yylval = strdup(yytext); return IDENTIFIER; }
+"printf"                    { return PRINTFF; }
+"scanf"                     { return SCANFF; }
+"int"                       { return INT; }
+"float"                     { return FLOAT; }
+"char"                      { return CHAR; }
+"void"                      { return VOID; }
+"return"                    { return RETURN; }
+"for"	                    { return FOR; }
+"if"	                    { return IF; }
+"else"	                    { return ELSE; }
+^"#include"[ ]*<.+\.h>      { return INCLUDE; }
+"true"                      { return TRUE; }
+"false"                     { return FALSE; }
+[-]?{digit}+                { return NUMBER; }
+[-]?{digit}+\.{digit}{1,6}  { return FLOAT_NUM; }
+{alpha}({alpha}|{digit})*   { return ID; }
+{unary}                     { return UNARY; }
+"<="                        { return LE; }
+">="                        { return GE; }
+"=="                        { return EQ; }
+"!="                        { return NE; }
+">"	                        { return GT; }
+"<"	                        { return LT; }
+"&&"	                    { return AND; }
+"||"	                    { return OR; }
+"+"                         { return ADD; }
+"-"                         { return SUBTRACT; }
+"/"                         { return DIVIDE; }
+"*"                         { return MULTIPLY; }
+\/\/.*                      { ; }
+\/\*(.*\n)*.*\*\/           { ; } 
+[ \t]*                      { ; }
+[\n]                        { line_number++; }
+.	                        { return *yytext; }
+["].*["]                    { return STR; }
+['].[']                     { return CHARACTER; }
 
-[ \t\n]     ; /* Ignore whitespace and newlines */
-.           { return yytext[0]; }
 %%
 
-int yywrap(void) {
+/* subroutine */
+int yywrap() {
     return 1;
 }
 

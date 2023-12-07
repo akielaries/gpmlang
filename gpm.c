@@ -1,7 +1,13 @@
-#include "libio.h"
 #include <stdio.h>
 
-extern int yyparse(void);
+extern FILE *yyin;          /** for parsing input file */
+//extern int yylineno;        /** keep track of file line number */
+
+int yyparse(void);
+
+void yyerror(const char *s) {
+    fprintf(stderr, "Error: %s\n", s);
+}
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -9,17 +15,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FILE *f = fopen(argv[1], "r");
-    if (!f) {
+    FILE *file = fopen(argv[1], "r");
+    if (!file) {
         perror("Error opening file");
         return 1;
     }
 
-    yyin = f;
+    yyin = file;
     yyparse();
 
-    fclose(f);
-
+    fclose(file);
     return 0;
 }
 

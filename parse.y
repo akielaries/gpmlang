@@ -1,86 +1,124 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/* Grammar rules for parsing gpmlang programs */
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+    #include <ctype.h>
+    //#include "lex.yy.c"
 
-int yylex(void);
-void yyerror(const char *s);
-
-int a, b, c;
-
+    void yyerror(const char *s);
+    int yylex();
+    int yywrap();
 %}
 
-%token INT IDENTIFIER NUMBER PRINT
-
-%left '+' '-'
+%token VOID
+%token CHARACTER
+%token PRINTFF
+%token SCANFF
+%token INT
+%token FLOAT
+%token CHAR
+%token FOR
+%token IF
+%token ELSE
+%token TRUE
+%token FALSE
+%token NUMBER
+%token FLOAT_NUM
+%token ID
+%token LE
+%token GE
+%token EQ
+%token NE
+%token GT
+%token LT
+%token AND
+%token OR
+%token STR
+%token ADD
+%token MULTIPLY
+%token DIVIDE
+%token SUBTRACT
+%token UNARY
+%token INCLUDE
+%token RETURN
 
 %%
-program: statement_list
+/* RULES */
+
+
+program: headers main '(' ')' '{' body return '}'
+       ;
+
+headers: headers headers
+       | INCLUDE
+       ;
+
+main: datatype ID
+    ;
+
+datatype: INT 
+        | FLOAT 
+        | CHAR
+        | VOID
         ;
 
-statement_list: statement
-              | statement_list statement
-              ;
+body: FOR '(' statement ';' condition ';' statement ')' '{' body '}'
+    | IF '(' condition ')' '{' body '}' else
+    | statement ';' 
+    | body body
+    | PRINTFF '(' STR ')' ';'
+    | SCANFF '(' STR ',' '&' ID ')' ';'
+    ;
 
-statement: declaration
-         | assignment
-         | print_statement
+else: ELSE '{' body '}'
+    |
+    ;
+
+condition: value relop value 
+         | TRUE 
+         | FALSE
          ;
 
-declaration: INT IDENTIFIER '=' NUMBER ';'
-            {
-                if ($2 == 'a') a = $4;
-                else if ($2 == 'b') b = $4;
-                else if ($2 == 'c') c = $4;
-            }
-            ;
+statement: datatype ID init 
+         | ID '=' expression 
+         | ID relop expression
+         | ID UNARY 
+         | UNARY ID
+         ;
 
-assignment: IDENTIFIER '=' expression ';'
-            {
-                if ($1 == 'a') a = $3;
-                else if ($1 == 'b') b = $3;
-                else if ($1 == 'c') c = $3;
-            }
-            ;
+init: '=' value 
+    |
+    ;
 
-print_statement: PRINT expression ';'
-               {
-                   printf("%d\n", $2);
-               }
-               ;
-
-expression: NUMBER
-          | IDENTIFIER
-          | expression '+' expression
-          {
-              $$ = $1 + $3;
-          }
+expression: expression arithmetic expression
+          | value
           ;
 
+arithmetic: ADD 
+          | SUBTRACT 
+          | MULTIPLY
+          | DIVIDE
+          ;
+
+relop: LT
+     | GT
+     | LE
+     | GE
+     | EQ
+     | NE
+     ;
+
+value: NUMBER
+     | FLOAT_NUM
+     | CHARACTER
+     | ID
+     ;
+
+return: RETURN value ';' 
+      |
+      ;
+
+
 %%
-
-void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s at line %d\n", s, yylineno);
-}
-
-int main(int argc, char *argv[]) {
-    FILE *yyin;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
-        return 1;
-    }
-
-    FILE *input_file = fopen(argv[1], "r");
-    if (!input_file) {
-        perror("Error opening input file");
-        return 1;
-    }
-
-    yyin = input_file;
-    yyparse();
-
-    fclose(input_file);
-    return 0;
-}
 
