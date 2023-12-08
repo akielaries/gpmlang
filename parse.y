@@ -6,30 +6,29 @@
     #include <ctype.h>
     
     //#include "lex.yy.c"
+    #include "syntax_table.h"
+    #include "syntax_tree.h"
 
+    /* declarations for Yacc util functions */
     void yyerror(const char *s);
     int yylex();
     int yywrap();
 
-    void add(char);
-    void insert_type();
-    int search(char *);
-    void insert_type();
-
-    struct dataType {
+    /*struct dataType {
         char * id_name;
         char * data_type;
         char * type;
         int line_no;
-    } symbol_table[40];
-
-    //#include "syntax_table.h"
+    }*/
+    struct dataType symbol_table[40];
 
     int count = 0;
     int q;
     char type[10];
     extern int line_number;
     extern char *yytext;
+
+    struct ASTnode *head_ptr;
 
 %}
 
