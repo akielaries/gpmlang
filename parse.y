@@ -73,77 +73,77 @@
 /* RULES */
 
 program: headers main '(' ')' '{' body return '}'
-;
+       ;
 
 headers: headers headers
-| INCLUDE { add('H'); }
-;
+       | INCLUDE { add('H'); }
+       ;
 
 main: datatype ID { add('F'); }
-;
+    ;
 
 datatype: INT { insert_type(); }
-| FLOAT { insert_type(); }
-| CHAR { insert_type(); }
-| VOID { insert_type(); }
-;
+        | FLOAT { insert_type(); }
+        | CHAR { insert_type(); }
+        | VOID { insert_type(); }
+        ;
 
 body: FOR { add('K'); } '(' statement ';' condition ';' statement ')' '{' body '}'
-| IF { add('K'); } '(' condition ')' '{' body '}' else
-| statement ';'
-| body body 
-| PRINTFF { add('K'); } '(' STR ')' ';'
-| SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';'
-;
+    | IF { add('K'); } '(' condition ')' '{' body '}' else
+    | statement ';'
+    | body body 
+    | PRINTFF { add('K'); } '(' STR ')' ';'
+    | SCANFF { add('K'); } '(' STR ',' '&' ID ')' ';'
+    ;
 
 else: ELSE { add('K'); } '{' body '}'
-|
-;
+    |
+    ;
 
 condition: value relop value 
-| TRUE { add('K'); }
-| FALSE { add('K'); }
-|
-;
+         | TRUE { add('K'); }
+         | FALSE { add('K'); }
+         |
+         ;
 
 statement: datatype ID { add('V'); } init
-| ID '=' expression
-| ID relop expression
-| ID UNARY
-| UNARY ID
-;
+         | ID '=' expression
+         | ID relop expression
+         | ID UNARY
+         | UNARY ID
+         ;
 
 init: '=' value
-|
-;
+    |
+    ;
 
 expression: expression arithmetic expression
-| value
-;
+          | value
+          ;
 
 arithmetic: ADD 
-| SUBTRACT 
-| MULTIPLY
-| DIVIDE
-;
+          | SUBTRACT 
+          | MULTIPLY
+          | DIVIDE
+          ;
 
 relop: LT
-| GT
-| LE
-| GE
-| EQ
-| NE
-;
+     | GT
+     | LE
+     | GE
+     | EQ
+     | NE
+     ;
 
 value: NUMBER { add('C'); }
-| FLOAT_NUM { add('C'); }
-| CHARACTER { add('C'); }
-| ID
-;
+     | FLOAT_NUM { add('C'); }
+     | CHARACTER { add('C'); }
+     | ID
+     ;
 
 return: RETURN { add('K'); } value ';'
-|
-;
+      |
+      ;
 
 %%
 
